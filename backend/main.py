@@ -1,11 +1,17 @@
+import uuid
+import os
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pypinyin import lazy_pinyin, Style
 from snownlp import SnowNLP
 from datetime import datetime, timezone
 from storage import save_record, get_history, init_db
-import uuid
 from fastapi import Request, Response, FastAPI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS").split(",")
 
 init_db()
 
