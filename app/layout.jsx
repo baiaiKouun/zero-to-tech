@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
                   rel="noreferrer"
                   target="_blank"
                 >
-                  <img src="/备案图标.png" alt="" />
+                  <img src="/bei-an-police.png" alt="" />
                   <span>川公网安备51012202002682号</span>
                 </a>
               </div>
