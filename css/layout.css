@@ -16,6 +16,46 @@ body {
   padding: 0 0 32px;
 }
 
+.site-footer {
+  padding: 28px 0 4px;
+  text-align: center;
+}
+
+.filing-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-soft);
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.filing-box a {
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.filing-box a:hover {
+  color: var(--text-main);
+}
+
+.police-filing-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.police-filing-link img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
