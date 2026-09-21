@@ -5,15 +5,12 @@ node_modules/
 .next/
 out/
 
-# production
 build/
 dist/
 
-# editor
 .vscode/*
 !.vscode/extensions.json
 
-# misc
 .DS_Store
 *.log
 .env*
@@ -21,3 +18,4 @@ dist/
 backend/.venv/
 backend/__pycache__/
 *.pyc
+backend/*.db
