@@ -1,7 +1,5 @@
 "use client";
 
-// 结果区卡片。这一节只加了一样东西：右上角的"历史记录"按钮。
-// 点它会让父组件把历史弹窗打开——这张卡自己不管历史长什么样。
 import { useEffect, useRef } from "react";
 import { animate, scrambleText } from "animejs";
 

@@ -54,7 +54,6 @@
   letter-spacing: -0.12px;
 }
 
-/* 分析请求失败时的提示文案（这一节新增） */
 .lab-error {
   color: #b42318;
   font-size: 14px;
@@ -120,8 +119,6 @@
   font-weight: 600;
   color: var(--text-main);
 }
-
-/* ── 历史记录：结果卡右上角的按钮 ＋ 弹窗（这一节新增） ── */
 
 .panel-heading-row {
   display: flex;

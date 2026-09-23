@@ -1,8 +1,5 @@
 "use client";
 
-// 用法：<AnimatedCardGrid className="dashboard-grid">… hero + 几张卡片 …</AnimatedCardGrid>
-// 和 4.4 一字未改——同一份"卡片飞入"动画。
-// 因为用了 useEffect / anime.js，要在浏览器里跑，所以顶上标了 "use client"。
 import { useEffect, useRef } from "react";
 import { animate, stagger } from "animejs";
 

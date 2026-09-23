@@ -5,8 +5,6 @@
   box-shadow: var(--shadow);
 }
 
-/* 卡片的初始状态：藏起来 + 微微下沉，等动画把它们抬起来。
-   cards.js 在浏览器加载完后用 anime.js 给它们做 stagger 入场。 */
 .card {
   opacity: 0;
   transform: translateY(24px);
@@ -21,7 +19,6 @@
   letter-spacing: -0.12px;
 }
 
-/* === 作品 panel === */
 .featured-work-panel {
   display: grid;
   gap: 8px;
@@ -71,7 +68,6 @@
   line-height: 1;
 }
 
-/* === 身份 panel === */
 .identity-panel {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
