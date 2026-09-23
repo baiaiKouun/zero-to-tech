@@ -7,7 +7,7 @@
 
 ## 技术栈
 
-- 前端：Next.js（静态导出）＋ React
+- 前端：Vue3 + Vite
 - 后端：FastAPI ＋ uvicorn
 - 分析：snownlp（情感）、pypinyin（注音）
 - 存储：SQLite
