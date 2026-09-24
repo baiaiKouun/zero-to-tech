@@ -16,3 +16,4 @@ backend/__pycache__/
 *.py[cod]
 backend/*.db
 backend/*.db-*
+BLOG_REBUILD_PLAN.md

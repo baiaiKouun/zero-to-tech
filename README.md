@@ -1,109 +1,255 @@
-# 文字实验室
+# zero-to-tech
 
-一个中文文本分析小工具：输入一段话，给出情感倾向评分和全文拼音，
-并把每次分析的结果存下来，各人只看得到自己的那一份。
+一个正在向个人博客演进的 Vue 3 项目。目前包含个人主页和中文文字实验室。
 
-零到全栈课程的贯穿项目。
+## 当前状态
+
+当前版本是一个 Vue 单页应用和 FastAPI 服务组成的中文文本分析工具：
+
+- `/`：个人主页，展示介绍、作品和学习方向
+- `/text-lab`：输入中文，获取拼音、情感分数和情感判断
+- `/api/profile`：提供主页内容
+- `/api/analyze`：分析文本并保存历史记录
+- `/api/history`：读取当前浏览器会话的分析历史
+- 数据暂时保存在 SQLite 中
+- 当前没有管理员账户和文章管理功能
+- 前端所有页面样式都使用 Tailwind CSS 工具类
+
+博客改造的目标是保留文字实验室，同时增加技术笔记、诗文札记和只允许管理员使用的文章后台。
 
 ## 技术栈
 
-- 前端：Vue3 + Vite
-- 后端：FastAPI ＋ uvicorn
-- 分析：snownlp（情感）、pypinyin（注音）
-- 存储：SQLite
-- 线上：Nginx
+| 部分 | 技术 | 用途 |
+| --- | --- | --- |
+| 前端框架 | Vue 3 | 页面组件和响应式状态 |
+| 路由 | Vue Router | 首页和文字实验室之间的单页路由 |
+| 构建工具 | Vite | 开发服务器和生产构建 |
+| 语言 | TypeScript | 页面、路由、接口数据的类型检查 |
+| 样式 | Tailwind CSS、`@tailwindcss/vite` | 布局、颜色、响应式和组件样式 |
+| 动画 | Anime.js | 卡片进入动画和分数动画 |
+| 后端 | FastAPI、Uvicorn | 提供主页和文本分析接口 |
+| 中文处理 | pypinyin、SnowNLP | 拼音转换和情感分析 |
+| 当前数据库 | SQLite | 保存文字实验室历史记录 |
+| 生产部署 | Nginx | 静态文件服务和 API 反向代理 |
 
-## 本地跑起来
 
-需要：Node.js 18+、Python 3.10+
+## 项目结构
 
-**后端**
-
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env          # 按下面「配置说明」填好
-fastapi dev                   # → http://localhost:8000
+```text
+zero-to-tech/
+├─ backend/
+│  ├─ main.py              FastAPI 应用和接口
+│  ├─ storage.py           SQLite 初始化与历史记录读写
+│  ├─ requirements.txt     Python 依赖
+│  └─ .env.example         后端环境变量示例
+├─ public/
+│  └─ bei-an-police.png    备案图标
+├─ src/
+│  ├─ components/Nav.vue   顶部导航
+│  ├─ assets/styles/       Tailwind CSS 入口
+│  ├─ data/site.ts         默认文案和数据类型
+│  ├─ router/index.ts      路由配置
+│  ├─ env.d.ts             Vite 环境变量类型
+│  ├─ views/HomeView.vue   个人主页
+│  ├─ views/TextLabView.vue 文字实验室
+│  └─ main.ts              前端入口
+├─ .env.example            前端环境变量示例
+├─ index.html              HTML 入口
+├─ package.json             前端脚本和依赖
+├─ tsconfig.json            TypeScript 配置
+└─ vite.config.mts         Vite、Vue 和 Tailwind 配置
 ```
 
-**前端**（另开一个终端）
+## 环境要求
 
-```bash
+- Node.js `20.19+` 或 `22.12+`
+- npm
+- Python 3.10 或更高版本
+
+Node.js 版本要求来自当前 Vite 依赖的运行时约束。可以使用 `node --version` 检查版本。
+
+## 只运行前端
+
+在项目根目录执行：
+
+```powershell
 npm install
-cp .env.example .env.local    # 按下面「配置说明」填好
-npm run dev                   # → http://localhost:3000
+npm run dev
 ```
 
-## 部署到服务器
+然后打开终端显示的地址，默认通常是：
 
-前提：服务器上已装好 Python 3.10+、Node.js 18+ 和 Nginx，
-且 Nginx 的站点根目录已指向本项目的 `out/`、监听 80 端口。
-
-**1. 拉取代码**
-
-```bash
-cd ~/zero-to-tech
-git pull
+```text
+http://localhost:5173
 ```
 
-**2. 前端：装依赖、写配置、构建**
+只运行前端时，首页可以展示本地默认数据。文字分析和历史记录需要后端服务。
 
-```bash
-npm install
-cp .env.example .env.production   # 按下面「配置说明」填好
-npm run build                     # 产物进 out/，由 Nginx 提供服务
-```
+## 本地完整运行
 
-**3. 后端：建环境、装依赖、写配置**
+建议打开两个终端：一个运行后端，一个运行前端。
 
-```bash
+### 1. 启动后端
+
+在第一个终端执行：
+
+```powershell
 cd backend
-python3 -m venv --prompt=zero-to-tech .venv   # 首次部署才需要
-source .venv/bin/activate
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-cp .env.example .env              # 按下面「配置说明」填好
+Copy-Item .env.example .env
 ```
 
-**4. 后端：在后台跑起来**
+编辑 `backend/.env`，至少设置：
 
-```bash
-nohup .venv/bin/fastapi run > backend.log 2>&1 &
+```env
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
-`fastapi run` 是生产模式，监听 `0.0.0.0:8000`；`nohup ... &` 让它在
-SSH 断开后继续运行，日志写进 `backend.log`。
+继续执行：
 
-查看日志、停止服务：
-
-```bash
-tail -f backend.log           # 看日志
-ps aux | grep fastapi         # 找到进程号
-kill 进程号                    # 停掉
+```powershell
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**5. 放行 8000 端口**
+后端地址为 `http://localhost:8000`，接口文档为 `http://localhost:8000/docs`。
 
-去云平台控制台的安全组 / 防火墙，放行 8000 端口（80 端口应该已经放行）。
+### 2. 启动前端
 
-**6. 验证**
+在第二个终端打开项目根目录，执行：
 
-浏览器访问 `http://服务器IP`，打开文字实验室做一次分析，再看历史记录。
-换一个浏览器（或无痕窗口）再试一次，两边的历史记录应该是互相看不到的。
+```powershell
+npm install
+npm run dev
+```
 
-## 配置说明
+如果前端不设置 `VITE_API_BASE_URL`，开发服务器会把 `/api` 代理到 `http://127.0.0.1:8000`。也可以在项目根目录创建 `.env.local`，明确设置：
 
-配置文件不进 Git，请照着 `.env.example` 自己建一份。
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
 
-**前端**：开发用 `.env.local`，生产构建用 `.env.production`
+`VITE_` 开头的变量会进入浏览器代码，只能放公开配置，不能放密码或密钥。
 
-| 键 | 说明 | 本地 | 线上 |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | 后端接口地址 | `http://localhost:8000` | `http://服务器IP:8000` |
+## 常用命令
 
-**后端**：`backend/.env`
+```powershell
+npm run dev
+npm run typecheck
+npm run build
+npm run preview
+```
 
-| 键 | 说明 | 本地 | 线上 |
-| --- | --- | --- | --- |
-| `ALLOWED_ORIGINS` | 允许跨源访问的前端地址，多个用逗号隔开 | `http://localhost:3000` | `http://服务器IP`（不带端口） |
+命令说明：
+
+| 命令 | 作用 |
+| --- | --- |
+| `npm run dev` | 启动 Vite 开发服务器 |
+| `npm run typecheck` | 使用 `vue-tsc` 检查 TypeScript 和 Vue 类型 |
+| `npm run build` | 构建生产文件到 `dist/` |
+| `npm run preview` | 预览生产构建结果 |
+
+## 前端数据流程
+
+首页加载时先使用 `src/data/site.ts` 中的默认内容，然后请求 `GET /api/profile`。接口成功时替换为服务端内容，接口失败时保留默认内容。
+
+文字实验室提交表单后：
+
+```text
+输入文本
+  ↓
+POST /api/analyze
+  ↓
+显示原文、拼音、分数和标签
+  ↓
+后端保存当前浏览器会话的历史记录
+```
+
+历史记录通过 Cookie 中的 `session_id` 区分浏览器会话。它不是账户数据，清理 Cookie 或更换浏览器后，看到的记录会发生变化。
+
+## API
+
+### 获取主页数据
+
+```http
+GET /api/profile
+```
+
+返回首页标题、介绍、作品和个人信息。
+
+### 分析文本
+
+```http
+POST /api/analyze
+Content-Type: application/json
+```
+
+请求体：
+
+```json
+{
+  "text": "今天的风很轻，适合慢慢写下自己的想法。"
+}
+```
+
+返回示例：
+
+```json
+{
+  "text": "今天的风很轻，适合慢慢写下自己的想法。",
+  "score": 0.86,
+  "label": "偏积极",
+  "pinyin": "jīn tiān de fēng hěn qīng ...",
+  "created_at": "2026-09-23T06:00:00+00:00"
+}
+```
+
+### 获取历史记录
+
+```http
+GET /api/history?limit=10
+```
+
+接口根据 `session_id` Cookie 返回当前浏览器会话的记录。
+
+## 样式约定
+
+Tailwind 通过 [tailwind.css](src/assets/styles/tailwind.css) 和 `@tailwindcss/vite` 接入。页面模板直接使用 Tailwind 工具类，旧的全局 CSS 文件已经移除。
+
+Anime.js 只负责运行时动画，不负责页面基础样式。新增页面时优先使用 Tailwind；需要复杂的运行时效果时再引入动画库。
+
+## 生产部署
+
+生产环境建议使用 Nginx：
+
+```text
+浏览器 → Nginx HTTPS
+             ├─ /api/* → FastAPI：127.0.0.1:8000
+             └─ 其他   → dist/
+```
+
+构建前端：
+
+```powershell
+npm install
+npm run build
+```
+
+Nginx 需要：
+
+- 将站点根目录指向 `dist/`
+- 将 `/api/` 转发到 FastAPI
+- 将未知前端路径回退到 `/index.html`，支持 Vue Router 直接访问
+- 生产环境启用 HTTPS
+
+前端构建不需要在生产环境持续运行 Node.js 服务。FastAPI 应由 Uvicorn 配合 systemd 或其他进程管理器运行。
+
+## 当前限制
+
+- 尚未实现管理员账户和登录系统
+- 尚未实现文章、分类、标签和 Markdown 渲染
+- 文字实验室历史记录只按浏览器会话区分
+- 文本为空或过长时，服务端校验和错误提示仍需加强
+- 当前数据库是 SQLite，后续按计划迁移到 PostgreSQL
+- 尚未配置自动化测试和持续集成
